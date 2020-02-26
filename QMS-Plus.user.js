@@ -7,6 +7,7 @@
 // @license      https://creativecommons.org/licenses/by-nc-sa/4.0/deed.ru
 // @icon         https://raw.githubusercontent.com/CopyMist/QMS-Plus/master/icon-128.png
 // @homepage     https://4pda.ru/forum/index.php?showforum=5
+// @updateURL    https://raw.githubusercontent.com/CopyMist/QMS-Plus/master/QMS-Plus.user.js
 // @match        https://4pda.ru/forum/*act=qms*
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/arrive/2.4.1/arrive.min.js
