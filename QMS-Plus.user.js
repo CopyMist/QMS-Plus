@@ -30,13 +30,19 @@ var cssCode = [
     '.chk-wrap { display: flex; align-items: center; }',
     '.chk-wrap .chk-left { width: 13px; height: 13px; margin: 1px 0 0 20px; }',
     '.chk-wrap .chk-right { display: block; padding: 3px 20px 3px 7px; white-space: nowrap; }',
-    '.dropdown-menu > li > a:hover, .chk-wrap:hover, .tippy-tooltip { background-color: #E4EAF2; }',
+    '.dropdown-menu > li > a:hover, .chk-wrap:hover { background-color: #E4EAF2; }',
     '.chk-wrap > input:hover, .chk-wrap > label:hover { cursor: pointer; }',
-    '.tippy-tooltip { color: #4373c3; font-weight: bold; }',
-    '.tippy-tooltip[data-placement^=top]>.tippy-arrow { border-top-color: #E4EAF2; }',
-    '.tippy-tooltip[data-placement^=bottom]>.tippy-arrow { border-bottom-color: #E4EAF2; }',
-    '.tippy-tooltip[data-placement^=left]>.tippy-arrow { border-left-color: #E4EAF2; }',
-    '.tippy-tooltip[data-placement^=right]>.tippy-arrow { border-right-color: #E4EAF2; }',
+    '.tippy-tooltip { background-color: #eaf4ff; color: #4373c3; font-weight: bold; }',
+    '.tippy-tooltip[data-placement^=top]>.tippy-arrow { border-top-color: #eaf4ff; }',
+    '.tippy-tooltip[data-placement^=bottom]>.tippy-arrow { border-bottom-color: #eaf4ff; }',
+    '.tippy-tooltip[data-placement^=left]>.tippy-arrow { border-left-color: #eaf4ff; }',
+    '.tippy-tooltip[data-placement^=right]>.tippy-arrow { border-right-color: #eaf4ff; }',
+    'body.hide-header .holder-no-hidden, body.hide-header .menu-main-mobile { display: none; }',
+    'body.hide-header .navbar { top: 0; }',
+    'body.hide-header .header { height: 42px; max-height: 42px; }',
+    'body.hide-header #contacts, body.hide-header #body { top: 42px; }',
+    'body.hide-footer .footer { display: none; }',
+    'body.hide-footer #contacts, body.hide-footer #body { bottom: 0; }'
 ].join('\n');
 GM_addStyle(cssCode);
 
@@ -99,6 +105,16 @@ $('#body').arrive('.navbar', function() {
     }
 });
 
+// Скрытие шапки
+if (options['hide-header']) {
+    $('body').addClass('hide-header');
+}
+
+// Скрытие подвала
+if (options['hide-footer']) {
+    $('body').addClass('hide-footer');
+}
+
 /*
  * Действия после document.ready
  */
@@ -114,6 +130,7 @@ $(function () {
 
     tippy('#qms-plus', {
         content: 'Сохранено. Обновите страницу (F5)',
-        trigger: 'manual'
+        trigger: 'manual',
+        distance: 3
     });
 });
