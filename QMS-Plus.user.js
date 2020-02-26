@@ -127,6 +127,7 @@ if (!options) {
 }
 
 var qmsClass = '.logo-in-qms';
+
 var bgSvg = GM_getResourceText('backgroundSvg');
 var settingsHtml = '' +
     '<div class="dropdown" id="qms-plus">' +
@@ -145,14 +146,14 @@ var settingsHtml = '' +
  */
 
 // Замена SVG-смайлика на свой фон "QMS Plus"
-$('.body-tbl svg').replaceWith(bgSvg);
-$('#body').arrive('.body-tbl', function() {
+$(qmsClass).find('.body-tbl svg').replaceWith(bgSvg);
+$(qmsClass).arrive('.body-tbl', function() {
     $('.body-tbl svg').replaceWith(bgSvg);
 });
 
 // Добавление дропдауна "Настройки QMS Plus"
-$('.nav-right > .dropdown').before(settingsHtml);
-$('#body').arrive('.navbar', function() {
+$(qmsClass).find('.nav-right > .dropdown').before(settingsHtml);
+$(qmsClass).arrive('.navbar', function() {
     if (!$('#qms-plus').length) {
         $('.nav-right > .dropdown').before(settingsHtml);
         initSettings();
@@ -193,4 +194,12 @@ $(function () {
             this.scrollIntoView({behavior: 'smooth', block: 'end'});
         }, 100));
     }
+
+    // Название кнопки "Отправить"
+    $('#submit-with-attach-file [type="submit"]').val('Отправить (Ctrl+Enter)')
+        .closest('div.block').next().next().remove();
+    $(qmsClass).arrive('#submit-with-attach-file', function() {
+        $(this).find('[type="submit"]').val('Отправить (Ctrl+Enter)')
+            .closest('div.block').next().next().remove();
+    });
 });
