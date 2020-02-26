@@ -12,14 +12,16 @@
 // @require      https://cdnjs.cloudflare.com/ajax/libs/arrive/2.4.1/arrive.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/tippy.js/5.2.1/tippy-bundle.iife.min.js
+// @require      https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.15/lodash.min.js
 // @resource     backgroundSvg https://raw.githubusercontent.com/CopyMist/QMS-Plus/master/background.svg
 // @grant        GM_addStyle
 // @grant        GM_getResourceText
 // @grant        GM_getValue
 // @grant        GM_setValue
+// @grant        unsafeWindow
 // ==/UserScript==
 
-/* global $, tippy */
+/* global $, _, tippy */
 
 /*
  * Стили
@@ -27,16 +29,20 @@
 
 var cssCode = [
     '.body-tbl svg { height: 100%; padding: 1%; }',
-    '.chk-wrap { display: flex; align-items: center; }',
-    '.chk-wrap .chk-left { width: 13px; height: 13px; margin: 1px 0 0 20px; }',
-    '.chk-wrap .chk-right { display: block; padding: 3px 20px 3px 7px; white-space: nowrap; }',
-    '.dropdown-menu > li > a:hover, .chk-wrap:hover { background-color: #E4EAF2; }',
-    '.chk-wrap > input:hover, .chk-wrap > label:hover { cursor: pointer; }',
+    '.header, #contacts, #body, .footer, .navbar, .navbar .nav-left, .navbar .nav, .navbar .nav-right { transition: none; }',
+    // Dropdown
+    '.dropdown .chk-wrap { display: flex; align-items: center; }',
+    '.dropdown .chk-left { width: 13px; height: 13px; margin: 1px 0 0 20px; }',
+    '.dropdown .chk-right { display: block; padding: 3px 20px 3px 7px; white-space: nowrap; }',
+    '.dropdown-menu > li > a:hover, .dropdown .chk-wrap:hover { background-color: #E4EAF2; }',
+    '.dropdown .chk-wrap > input:hover, .dropdown .chk-wrap > label:hover { cursor: pointer; }',
+    // Tippy
     '.tippy-tooltip { background-color: #eaf4ff; color: #4373c3; font-weight: bold; }',
     '.tippy-tooltip[data-placement^=top]>.tippy-arrow { border-top-color: #eaf4ff; }',
     '.tippy-tooltip[data-placement^=bottom]>.tippy-arrow { border-bottom-color: #eaf4ff; }',
     '.tippy-tooltip[data-placement^=left]>.tippy-arrow { border-left-color: #eaf4ff; }',
     '.tippy-tooltip[data-placement^=right]>.tippy-arrow { border-right-color: #eaf4ff; }',
+    // Header/Footer
     'body.hide-header .holder-no-hidden, body.hide-header .menu-main-mobile { display: none; }',
     'body.hide-header .navbar { top: 0; }',
     'body.hide-header .header { height: 42px; max-height: 42px; }',
@@ -62,6 +68,40 @@ function optionHtml(name, title, checked) {
     return result;
 }
 
+function initSettings() {
+    var $settings = $('#qms-plus');
+
+    $settings.find('.checkbox').change(function () {
+        options[this.name] = this.checked;
+        GM_setValue('options', options);
+        $settings[0]._tippy.show();
+    });
+
+    tippy('#qms-plus', {
+        content: 'Сохранено. Обновите страницу (F5)',
+        trigger: 'manual',
+        distance: 3
+    });
+}
+
+function removeNiceScroll($selector) {
+    var $scrolls = $selector.getNiceScroll();
+
+    if ($scrolls.length) {
+        $scrolls.remove();
+
+        $scrolls.each(function() {
+            // Крутим вниз, если диалог
+            var element = this.opt.win[0];
+            if (element.id === 'scroll-thread') {
+                setTimeout(function() {
+                    element.scrollTop = element.scrollHeight;
+                }, 100);
+            }
+        });
+    }
+}
+
 /*
  * Глобальные переменные
  */
@@ -70,7 +110,8 @@ var options = GM_getValue('options');
 if (!options) {
     options = {
         'hide-header': true,
-        'hide-footer': true
+        'hide-footer': true,
+        'smooth-disable': true
     };
     GM_setValue('options', options);
 }
@@ -84,6 +125,7 @@ var settingsHtml = '' +
     '<ul class="dropdown-menu pull-right">' +
     optionHtml('hide-header', 'Скрывать шапку (header)', options['hide-header']) +
     optionHtml('hide-footer', 'Скрывать подвал (footer)', options['hide-footer']) +
+    optionHtml('smooth-disable', 'Убрать плавную прокрутку', options['smooth-disable']) +
     '</ul>' +
     '</div> &nbsp;';
 
@@ -102,6 +144,7 @@ $('.nav-right > .dropdown').before(settingsHtml);
 $('#body').arrive('.navbar', function() {
     if (!$('#qms-plus').length) {
         $('.nav-right > .dropdown').before(settingsHtml);
+        initSettings();
     }
 });
 
@@ -120,17 +163,15 @@ if (options['hide-footer']) {
  */
 
 $(function () {
-    var $settings = $('#qms-plus');
+    initSettings();
 
-    $settings.find('.checkbox').change(function () {
-        options[this.name] = this.checked;
-        GM_setValue('options', options);
-        $settings[0]._tippy.show();
-    });
+    var $u = unsafeWindow.$;
 
-    tippy('#qms-plus', {
-        content: 'Сохранено. Обновите страницу (F5)',
-        trigger: 'manual',
-        distance: 3
-    });
+    // Убираем jQuery.NiceScroll
+    if (options['smooth-disable']) {
+        removeNiceScroll($u('[data-scrollframe-init]'));
+        $(document).arrive('.nicescroll-rails', function () {
+            removeNiceScroll($u(this).parent());
+        });
+    }
 });
