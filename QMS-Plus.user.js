@@ -10,7 +10,8 @@
 // @match        https://4pda.ru/forum/*act=qms*
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/arrive/2.4.1/arrive.min.js
-// @require      https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.15/lodash.min.js
+// @require      https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js
+// @require      https://cdnjs.cloudflare.com/ajax/libs/tippy.js/5.2.1/tippy-bundle.iife.min.js
 // @resource     backgroundSvg https://raw.githubusercontent.com/CopyMist/QMS-Plus/master/background.svg
 // @grant        GM_addStyle
 // @grant        GM_getResourceText
@@ -18,7 +19,7 @@
 // @grant        GM_setValue
 // ==/UserScript==
 
-/* global $ */
+/* global $, tippy */
 
 /*
  * Стили
@@ -29,10 +30,14 @@ var cssCode = [
     '.chk-wrap { display: flex; align-items: center; }',
     '.chk-wrap .chk-left { width: 13px; height: 13px; margin: 1px 0 0 20px; }',
     '.chk-wrap .chk-right { display: block; padding: 3px 20px 3px 7px; white-space: nowrap; }',
-    '.dropdown-menu > li > a:hover, .chk-wrap:hover { background-color: #E4EAF2; }',
-    '.chk-wrap > input:hover, .chk-wrap > label:hover { cursor: pointer; }'
+    '.dropdown-menu > li > a:hover, .chk-wrap:hover, .tippy-tooltip { background-color: #E4EAF2; }',
+    '.chk-wrap > input:hover, .chk-wrap > label:hover { cursor: pointer; }',
+    '.tippy-tooltip { color: #4373c3; font-weight: bold; }',
+    '.tippy-tooltip[data-placement^=top]>.tippy-arrow { border-top-color: #E4EAF2; }',
+    '.tippy-tooltip[data-placement^=bottom]>.tippy-arrow { border-bottom-color: #E4EAF2; }',
+    '.tippy-tooltip[data-placement^=left]>.tippy-arrow { border-left-color: #E4EAF2; }',
+    '.tippy-tooltip[data-placement^=right]>.tippy-arrow { border-right-color: #E4EAF2; }',
 ].join('\n');
-
 GM_addStyle(cssCode);
 
 /*
@@ -104,5 +109,11 @@ $(function () {
     $settings.find('.checkbox').change(function () {
         options[this.name] = this.checked;
         GM_setValue('options', options);
+        $settings[0]._tippy.show();
+    });
+
+    tippy('#qms-plus', {
+        content: 'Сохранено. Обновите страницу (F5)',
+        trigger: 'manual'
     });
 });
