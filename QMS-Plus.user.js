@@ -30,7 +30,7 @@
 var cssCode = [
     '.body-tbl svg { height: 100%; padding: 1%; }',
     '.header, #contacts, #body, .footer, .navbar, .navbar .nav-left, .navbar .nav, .navbar .nav-right { transition: none; }',
-    // Dropdown
+    // Dropdown checkboxes
     '.dropdown .chk-wrap { display: flex; align-items: center; }',
     '.dropdown .chk-left { width: 13px; height: 13px; margin: 1px 0 0 20px; }',
     '.dropdown .chk-right { display: block; padding: 3px 20px 3px 7px; white-space: nowrap; }',
@@ -42,13 +42,22 @@ var cssCode = [
     '.tippy-tooltip[data-placement^=bottom]>.tippy-arrow { border-bottom-color: #eaf4ff; }',
     '.tippy-tooltip[data-placement^=left]>.tippy-arrow { border-left-color: #eaf4ff; }',
     '.tippy-tooltip[data-placement^=right]>.tippy-arrow { border-right-color: #eaf4ff; }',
-    // Header/Footer
+    // Hide header/footer
     'body.hide-header .holder-no-hidden, body.hide-header .menu-main-mobile { display: none; }',
     'body.hide-header .navbar { top: 0; }',
     'body.hide-header .header { height: 42px; max-height: 42px; }',
     'body.hide-header #contacts, body.hide-header #body { top: 42px; }',
     'body.hide-footer .footer { display: none; }',
-    'body.hide-footer #contacts, body.hide-footer #body { bottom: 0; }'
+    'body.hide-footer #contacts, body.hide-footer #body { bottom: 0; }',
+    // Custom scroll
+    'body.custom-scroll .scrollframe::-webkit-scrollbar { width: 13px; }',
+    'body.custom-scroll #scroll-contacts::-webkit-scrollbar { width: 7px; }',
+    'body.custom-scroll .scrollframe::-webkit-scrollbar-track { background-color: #fff; border: 0; }',
+    'body.custom-scroll .scrollframe::-webkit-scrollbar-thumb { background: linear-gradient(to left, #E0EEFF, #C6E0FF); border: 1px solid #C6E0FF; border-right: 0; }',
+    'body.custom-scroll .scrollframe::-webkit-scrollbar-thumb:hover { background: #e0eeff; }',
+    'body.custom-scroll .scrollframe::-webkit-scrollbar-thumb:active { background-color: #C6E0FF; }',
+    'body.custom-scroll .scrollframe > .scrollframe-body { transform: none !important; padding-bottom: 0; }',
+    'body.custom-scroll .logo-in-qms .list-group .list-group-item { margin-left: 7px; padding-left: 5px; }'
 ].join('\n');
 GM_addStyle(cssCode);
 
@@ -116,6 +125,7 @@ if (!options) {
     GM_setValue('options', options);
 }
 
+var qmsClass = '.logo-in-qms';
 var bgSvg = GM_getResourceText('backgroundSvg');
 var settingsHtml = '' +
     '<div class="dropdown" id="qms-plus">' +
@@ -130,7 +140,7 @@ var settingsHtml = '' +
     '</div> &nbsp;';
 
 /*
- * Действия до document.ready
+ * До document.ready
  */
 
 // Замена SVG-смайлика на свой фон "QMS Plus"
@@ -159,19 +169,27 @@ if (options['hide-footer']) {
 }
 
 /*
- * Действия после document.ready
+ * После document.ready
  */
 
 $(function () {
     initSettings();
 
+    // Доступ к родному jQuery форума
     var $u = unsafeWindow.$;
 
-    // Убираем jQuery.NiceScroll
     if (options['smooth-disable']) {
+        $('body').addClass('custom-scroll');
+
+        // Убираем jQuery.NiceScroll
         removeNiceScroll($u('[data-scrollframe-init]'));
-        $(document).arrive('.nicescroll-rails', function () {
+        $(qmsClass).arrive('.nicescroll-rails', function () {
             removeNiceScroll($u(this).parent());
         });
+
+        // Крутим при новых сообщениях
+        $(qmsClass).arrive('[data-message-id]', _.debounce(function () {
+            this.scrollIntoView({behavior: 'smooth', block: 'end'});
+        }, 100));
     }
 });
