@@ -39,17 +39,30 @@ GM_addStyle(cssCode);
  * Функции
  */
 
-function optionHtml(name, title) {
-    return ''+
-        '<div class="chk-wrap clearfix">' +
-        '<input class="checkbox chk-left" type="checkbox" name="' + name + '" value="1" id="' + name + '" checked="checked">' +
-        '<label class="chk-right" for="' + name + '">' + title + '</label>' +
-        '</div>';
+function optionHtml(name, title, checked) {
+    var result = '<div class="chk-wrap clearfix">' +
+        '<input class="checkbox chk-left" type="checkbox" name="' + name + '" value="1" id="' + name + '"';
+
+    if (checked) {
+        result+=' checked="checked"';
+    }
+
+    result+='><label class="chk-right" for="' + name + '">' + title + '</label></div>';
+    return result;
 }
 
 /*
  * Глобальные переменные
  */
+
+var options = GM_getValue('options');
+if (!options) {
+    options = {
+        'hide-header': true,
+        'hide-footer': true
+    };
+    GM_setValue('options', options);
+}
 
 var bgSvg = GM_getResourceText('backgroundSvg');
 var settingsHtml = '' +
@@ -58,8 +71,8 @@ var settingsHtml = '' +
     '<i class="icon-cog"></i><span class="on-show-sidebar">Настройки QMS Plus</span><i class="icon-down-dir-1"></i>' +
     '</a>' +
     '<ul class="dropdown-menu pull-right">' +
-    optionHtml('hide-header', 'Скрыть шапку (header)') +
-    optionHtml('hide-footer', 'Скрыть подвал (footer)') +
+    optionHtml('hide-header', 'Скрывать шапку (header)', options['hide-header']) +
+    optionHtml('hide-footer', 'Скрывать подвал (footer)', options['hide-footer']) +
     '</ul>' +
     '</div> &nbsp;';
 
@@ -86,5 +99,10 @@ $('#body').arrive('.navbar', function() {
  */
 
 $(function () {
-    //$('.nav-right > .dropdown').before(settingsHtml);
+    var $settings = $('#qms-plus');
+
+    $settings.find('.checkbox').change(function () {
+        options[this.name] = this.checked;
+        GM_setValue('options', options);
+    });
 });
