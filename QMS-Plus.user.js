@@ -9,6 +9,7 @@
 // @homepage     https://4pda.ru/forum/index.php?showforum=5
 // @updateURL    https://raw.githubusercontent.com/CopyMist/QMS-Plus/master/QMS-Plus.user.js
 // @match        https://4pda.ru/forum/*act=qms*
+// @match        http://4pda.ru/forum/*act=qms*
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/arrive/2.4.1/arrive.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js
@@ -55,7 +56,7 @@ var cssCode = [
     'body.custom-scroll .scrollframe::-webkit-scrollbar { width: 13px; }',
     'body.custom-scroll #scroll-contacts::-webkit-scrollbar { width: 7px; }',
     'body.custom-scroll .scrollframe::-webkit-scrollbar-track { background-color: #fff; border: 0; }',
-    'body.custom-scroll .scrollframe::-webkit-scrollbar-thumb { background: linear-gradient(to left, #E0EEFF, #C6E0FF); border: 1px solid #C6E0FF; border-right: 0; }',
+    'body.custom-scroll .scrollframe::-webkit-scrollbar-thumb { background: linear-gradient(to right, #E0EEFF, #C6E0FF); border: 1px solid #C6E0FF; border-right: 0; }',
     'body.custom-scroll .scrollframe::-webkit-scrollbar-thumb:hover { background: #e0eeff; }',
     'body.custom-scroll .scrollframe::-webkit-scrollbar-thumb:active { background-color: #C6E0FF; }',
     'body.custom-scroll .scrollframe > .scrollframe-body { transform: none !important; padding-bottom: 0; }',
@@ -145,7 +146,7 @@ var bgSvg = GM_getResourceText('backgroundSvg');
 var settingsHtml = '' +
     '<div class="dropdown" id="qms-plus">' +
     '<a href="#" class="btn" title="Настройки QMS Plus" data-toggle="dropdown">' +
-    '<i class="icon-cog"></i><span class="on-show-sidebar">Настройки QMS Plus</span><i class="icon-down-dir-1"></i>' +
+    '<i class="icon-cog"></i><span class="on-show-sidebar">QMS Plus</span><i class="icon-down-dir-1"></i>' +
     '</a>' +
     '<ul class="dropdown-menu pull-right">' +
     optionHtml('hide-header', 'Скрывать шапку (header)', options['hide-header']) +
@@ -165,7 +166,7 @@ $(qmsClass).arrive('.body-tbl', function() {
     $('.body-tbl svg').replaceWith(bgSvg);
 });
 
-// Добавление дропдауна "Настройки QMS Plus"
+// Добавление дропдауна "QMS Plus"
 $(qmsClass).find('.nav-right > .dropdown').before(settingsHtml);
 $(qmsClass).arrive('.navbar', function() {
     if (!$('#qms-plus').length) {
