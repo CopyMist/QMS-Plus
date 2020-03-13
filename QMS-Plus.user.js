@@ -6,7 +6,7 @@
 // @author       CopyMist
 // @license      https://creativecommons.org/licenses/by-nc-sa/4.0/deed.ru
 // @icon         https://raw.githubusercontent.com/CopyMist/QMS-Plus/master/icon-128.png
-// @homepage     https://4pda.ru/forum/index.php?showforum=5
+// @homepage     https://4pda.ru/forum/index.php?showtopic=985927
 // @updateURL    https://raw.githubusercontent.com/CopyMist/QMS-Plus/master/QMS-Plus.user.js
 // @match        https://4pda.ru/forum/*act=qms*
 // @match        http://4pda.ru/forum/*act=qms*
@@ -32,27 +32,27 @@
 var cssCode = [
     '.body-tbl svg { height: 100%; padding: 1%; }',
     '.header, #contacts, #body, .footer, .navbar, .navbar .nav-left, .navbar .nav, .navbar .nav-right { transition: none; }',
-    // Dropdown checkboxes
+    // Выпадающий список
     '.logo-in-qms .dropdown .chk-wrap { display: flex; align-items: center; }',
     '.logo-in-qms .dropdown .chk-left { width: 13px; height: 13px; margin: 1px 0 0 20px; }',
     '.logo-in-qms .dropdown .chk-right { display: block; padding: 3px 20px 3px 7px; white-space: nowrap; }',
     '.logo-in-qms .dropdown + .dropdown { margin-left: 10px; }',
     '.dropdown-menu > li > a:hover, .dropdown .chk-wrap:hover { background-color: #E4EAF2; }',
     '.dropdown .chk-wrap > input:hover, .dropdown .chk-wrap > label:hover { cursor: pointer; }',
-    // Tippy
+    // Всплывающие подсказки
     '.tippy-tooltip { background-color: #eaf4ff; color: #4373c3; font-weight: bold; }',
     '.tippy-tooltip[data-placement^=top]>.tippy-arrow { border-top-color: #eaf4ff; }',
     '.tippy-tooltip[data-placement^=bottom]>.tippy-arrow { border-bottom-color: #eaf4ff; }',
     '.tippy-tooltip[data-placement^=left]>.tippy-arrow { border-left-color: #eaf4ff; }',
     '.tippy-tooltip[data-placement^=right]>.tippy-arrow { border-right-color: #eaf4ff; }',
-    // Hide header/footer
+    // Скрытие шапки и подвала
     'body.hide-header .holder-no-hidden, body.hide-header .menu-main-mobile { display: none; }',
     'body.hide-header .navbar { top: 0; }',
     'body.hide-header .header { height: 42px; max-height: 42px; }',
     'body.hide-header #contacts, body.hide-header #body { top: 42px; }',
     'body.hide-footer .footer { display: none; }',
     'body.hide-footer #contacts, body.hide-footer #body { bottom: 0; }',
-    // Custom scroll
+    // Полоса прокрутки
     'body.custom-scroll .scrollframe::-webkit-scrollbar { width: 13px; }',
     'body.custom-scroll #scroll-contacts::-webkit-scrollbar { width: 7px; }',
     'body.custom-scroll .scrollframe::-webkit-scrollbar-track { background-color: #fff; border: 0; }',
@@ -61,7 +61,7 @@ var cssCode = [
     'body.custom-scroll .scrollframe::-webkit-scrollbar-thumb:active { background-color: #C6E0FF; }',
     'body.custom-scroll .scrollframe > .scrollframe-body { transform: none !important; padding-bottom: 0; }',
     'body.custom-scroll #scroll-contacts .list-group-item { margin-left: 7px; padding-left: 5px; }',
-    // Search form
+    // Форма поиска
     'body.move-search .qms-search-form { display: inline-flex !important; height: auto; min-height: auto; background: transparent; border: 0; margin: 0 !important; padding: 0; }',
     'body.move-search .qms-search-form > div { float: none !important; margin: 0 !important; padding: 0 !important; }',
     'body.move-search .qms-search-form > .btn { margin: 0; }',
