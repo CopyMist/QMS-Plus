@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         QMS Plus
 // @namespace    4PDA
-// @version      0.1
+// @version      0.1.1
 // @description  Юзерскрипт для добавления/исправления функционала QMS на форуме 4PDA
 // @author       CopyMist
 // @license      https://creativecommons.org/licenses/by-nc-sa/4.0/deed.ru
@@ -9,7 +9,9 @@
 // @homepage     https://4pda.ru/forum/index.php?showtopic=985927
 // @updateURL    https://raw.githubusercontent.com/CopyMist/QMS-Plus/master/QMS-Plus.user.js
 // @match        https://4pda.ru/forum/*act=qms*
+// @match        https://4pda.to/forum/*act=qms*
 // @match        http://4pda.ru/forum/*act=qms*
+// @match        http://4pda.to/forum/*act=qms*
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/arrive/2.4.1/arrive.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js
