@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         QMS Plus
 // @namespace    4PDA
-// @version      0.1.1
+// @version      0.2
 // @description  Юзерскрипт для добавления/исправления функционала QMS на форуме 4PDA
 // @author       CopyMist
 // @license      https://creativecommons.org/licenses/by-nc-sa/4.0/deed.ru
@@ -233,4 +233,40 @@ $(function () {
             $(this).prependTo('.navbar > .nav-right');
         });
     }
+
+    //Развернуть панель BB-кодов
+    expandBBCodes();
+    $('a.list-group-item.text-overflow').on('click', async () => {
+        await expandBBCodes();
+        setThreadsEvent();
+        setBackEvent();
+    });
+    setThreadsEvent();
 });
+
+function setThreadsEvent() {
+    $('a[id^=row-thread-id-]').on('click', async () => {
+        await expandBBCodes();
+        setBackEvent();
+    });
+}
+
+function setBackEvent() {
+    $('#navbar-title>a.btn').on('click', async () => {
+        await expandBBCodes();
+        setThreadsEvent();
+        setBackEvent();
+    });
+}
+
+async function expandBBCodes() {
+    return new Promise(resolve => {
+        setTimeout( () => {
+            const panel = $('#panel-bb-codes');
+            if (panel && panel.attr('class') && !panel.attr('class').includes('show')) {
+                $('#btn-bb-codes').click()
+            }
+            resolve();
+        }, 300)
+    })
+}
