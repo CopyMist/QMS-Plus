@@ -1,13 +1,14 @@
 // ==UserScript==
 // @name         QMS Plus
 // @namespace    4PDA
-// @version      0.1.1
+// @version      0.2.1
 // @description  Юзерскрипт для добавления/исправления функционала QMS на форуме 4PDA
-// @author       CopyMist
+// @author       CopyMist, R3m
 // @license      https://creativecommons.org/licenses/by-nc-sa/4.0/deed.ru
-// @icon         https://raw.githubusercontent.com/CopyMist/QMS-Plus/master/icon-128.png
+// @icon         https://raw.githubusercontent.com/IamR3m/QMS-Plus/master/icon-128.png
 // @homepage     https://4pda.ru/forum/index.php?showtopic=985927
-// @updateURL    https://raw.githubusercontent.com/CopyMist/QMS-Plus/master/QMS-Plus.user.js
+// @downloadURL  https://raw.githubusercontent.com/IamR3m/QMS-Plus/master/QMS-Plus.user.js
+// @updateURL    https://raw.githubusercontent.com/IamR3m/QMS-Plus/master/QMS-Plus.meta.js
 // @match        https://4pda.ru/forum/*act=qms*
 // @match        https://4pda.to/forum/*act=qms*
 // @match        http://4pda.ru/forum/*act=qms*
@@ -17,7 +18,7 @@
 // @require      https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/tippy.js/5.2.1/tippy-bundle.iife.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.15/lodash.min.js
-// @resource     backgroundSvg https://raw.githubusercontent.com/CopyMist/QMS-Plus/master/background.svg
+// @resource     backgroundSvg https://raw.githubusercontent.com/IamR3m/QMS-Plus/master/background.svg
 // @grant        GM_addStyle
 // @grant        GM_getResourceText
 // @grant        GM_getValue
@@ -86,17 +87,17 @@ function optionHtml(name, title, checked) {
         '<input class="checkbox chk-left" type="checkbox" name="' + name + '" value="1" id="' + name + '"';
 
     if (checked) {
-        result+=' checked="checked"';
+        result += ' checked="checked"';
     }
 
-    result+='><label class="chk-right" for="' + name + '">' + title + '</label></div>';
+    result += '><label class="chk-right" for="' + name + '">' + title + '</label></div>';
     return result;
 }
 
 function initSettings() {
     var $settings = $('#qms-plus');
 
-    $settings.find('.checkbox').change(function () {
+    $settings.find('.checkbox').change(function() {
         options[this.name] = this.checked;
         GM_setValue('options', options);
         $settings[0]._tippy.show();
@@ -191,7 +192,7 @@ if (options['hide-footer']) {
  * После document.ready
  */
 
-$(function () {
+$(function() {
     initSettings();
 
     // Доступ к родному jQuery форума
@@ -202,13 +203,13 @@ $(function () {
 
         // Убираем jQuery.NiceScroll
         removeNiceScroll($u('[data-scrollframe-init]'));
-        $(qmsClass).arrive('.nicescroll-rails', function () {
+        $(qmsClass).arrive('.nicescroll-rails', function() {
             removeNiceScroll($u(this).parent());
         });
 
         // Крутим при новых сообщениях
-        $(qmsClass).arrive('[data-message-id]', _.debounce(function () {
-            this.scrollIntoView({behavior: 'smooth', block: 'end'});
+        $(qmsClass).arrive('[data-message-id]', _.debounce(function() {
+            this.scrollIntoView({ behavior: 'smooth', block: 'end' });
         }, 100));
     }
 
@@ -233,4 +234,40 @@ $(function () {
             $(this).prependTo('.navbar > .nav-right');
         });
     }
+
+    //Развернуть панель BB-кодов
+    expandBBCodes();
+    $('a.list-group-item.text-overflow').on('click', async() => {
+        await expandBBCodes();
+        setThreadsEvent();
+        setBackEvent();
+    });
+    setThreadsEvent();
 });
+
+function setThreadsEvent() {
+    $('a[id^=row-thread-id-]').on('click', async() => {
+        await expandBBCodes();
+        setBackEvent();
+    });
+}
+
+function setBackEvent() {
+    $('#navbar-title>a.btn').on('click', async() => {
+        await expandBBCodes();
+        setThreadsEvent();
+        setBackEvent();
+    });
+}
+
+async function expandBBCodes() {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            const panel = $('#panel-bb-codes');
+            if (panel && panel.attr('class') && !panel.attr('class').includes('show')) {
+                $('#btn-bb-codes').click()
+            }
+            resolve();
+        }, 300)
+    })
+}
